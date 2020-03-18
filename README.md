@@ -11,8 +11,9 @@ Automated behaviour driven tests were implemented with [behave-django](https://b
 ```sh
 python manage.py behave
 ```
+<img src=https://raw.githubusercontent.com/vamtiger-project/vamtiger-user-registry-django/master/image/bdd-tests.jpg style="max-height: 500px; background-color: #f0f0f0; border-radius: 3px" width=400>
 
-For test coverage:
+For test [coverage](https://coverage.readthedocs.io/en/coverage-5.0.4/):
 ```sh
 coverage erase
 coverage run manage.py behave
@@ -22,3 +23,4 @@ or
 ```bash
 sh test.sh
 ```
+<img src=https://raw.githubusercontent.com/vamtiger-project/vamtiger-user-registry-django/master/image/test-coverage.jpg style="max-height: 350px; background-color: #f0f0f0; border-radius: 3px" width=400>
