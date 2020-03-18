@@ -1,0 +1,45 @@
+<testsuite name="user_registry_api.User Reistry API" tests="4" errors="0" failures="0" skipped="0" time="0.420388" timestamp="2020-03-16T19:40:47.022131" hostname="James-Alexs-MBP"><testcase classname="user_registry_api.User Reistry API" name="Addding a new user" status="passed" time="0.013086"><system-out>
+<![CDATA[
+@scenario.begin
+  Scenario: Addding a new user
+    Given a new user ... passed in 0.001s
+    When posted to /user_registry_api/add_new_user ... passed in 0.010s
+    Then a new record should be added to the Users table ... passed in 0.001s
+
+@scenario.end
+--------------------------------------------------------------------------------
+]]>
+</system-out></testcase><testcase classname="user_registry_api.User Reistry API" name="A user can be retrieved" status="passed" time="0.008499"><system-out>
+<![CDATA[
+@scenario.begin
+  Scenario: A user can be retrieved
+    Given a new user posted to /user_registry_api/add_new_user ... passed in 0.006s
+    When requested from /user_registry_api/user/<int:user_id> ... passed in 0.003s
+    Then a user record should be retrieved ... passed in 0.000s
+
+@scenario.end
+--------------------------------------------------------------------------------
+]]>
+</system-out></testcase><testcase classname="user_registry_api.User Reistry API" name="All users cas be retrieved with pagination" status="passed" time="0.387673"><system-out>
+<![CDATA[
+@scenario.begin
+  Scenario: All users cas be retrieved with pagination
+    Given 100 users posted to /user_registry_api/add_new_user ... passed in 0.362s
+    When all users are requested from /user_registry_api/get_users ... passed in 0.026s
+    Then 10 users per page should be retrieved ... passed in 0.000s
+
+@scenario.end
+--------------------------------------------------------------------------------
+]]>
+</system-out></testcase><testcase classname="user_registry_api.User Reistry API" name="A user can be updated" status="passed" time="0.01113"><system-out>
+<![CDATA[
+@scenario.begin
+  Scenario: A user can be updated
+    Given a new user posted to /user_registry_api/add_new_user ... passed in 0.005s
+    When updated user data put to /user_registry_api/user/<int:user_id> ... passed in 0.006s
+    Then the user record should be updated ... passed in 0.000s
+
+@scenario.end
+--------------------------------------------------------------------------------
+]]>
+</system-out></testcase></testsuite>

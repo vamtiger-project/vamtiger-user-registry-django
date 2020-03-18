@@ -1,0 +1,7 @@
+[coverage:run]
+source = .
+omit = */env/*
+
+[coverage:report]
+show_missing = True
+skip_covered = True
