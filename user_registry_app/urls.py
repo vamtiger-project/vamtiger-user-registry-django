@@ -16,12 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.urls import include
-from user_registry_api.rest import add_new_user, handle_user, get_users
+from .views import home
 
-app_name = 'user_registry_api'
+app_name = 'user_registry_app'
 urlpatterns = [
-    path('add_new_user', add_new_user, name='add_new_user'),
-    path('user/<int:user_id>', handle_user, name='update_user'),
-    path('get_user/<int:user_id>', handle_user, name='get_user'),
-    path('get_users', get_users, name='get_users')
+    path('', home, name='home')
 ]

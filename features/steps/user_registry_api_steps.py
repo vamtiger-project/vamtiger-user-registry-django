@@ -39,14 +39,31 @@ def step_impl(context, required_field_name):
 
     context.userData = userDataMissingRequiredField
 
-@then('failed response data should be returned')
-def step_impl(context):
+@then('response from {response_url} should fail with "{response_error}"')
+def step_impl(context, response_url, response_error):
     context.test.assertEqual(ResponseResult.failed, context.response['result'])
     context.test.assertEqual(ResponseMessage.failed_to_add_new_user, context.response['message'])
     context.test.assertEqual(
         True,
-        all(error.startswith(ResponseErrorMessage.this_field_is_required) for error in context.errors)
+        all(error.startswith(response_error) for error in context.errors)
     )
+
+@given('a new user with numbers in the {nameField} or {surnameField} fields')
+def step_impl(context, nameField, surnameField):
+    userData = __get_user_data()
+
+    userData[nameField] = '%s %s' % (1, userData[nameField])
+    userData[surnameField] = '%s %s' % (userData[surnameField], 2)
+
+    context.userData = userData
+
+@given('a new user with an invalid {emailField}')
+def step_impl(context, emailField):
+    userData = __get_user_data()
+
+    userData[emailField] = userData[emailField].replace('@', '=')
+
+    context.userData = userData
 
 @given('a new user posted to {url}')
 def step_impl(context, url):
@@ -108,11 +125,12 @@ def step_impl(context, users_per_page):
 def step_impl(context, url_prefix):
     url = '%s/%s' % (url_prefix, context.userRecord.id)
     updatedUserData = __get_user_data()
-    updateResponse = context.test.client.put(url,json_stringify(updatedUserData))
+    updateResponse = context.test.client.put(url,json_stringify(updatedUserData)).json()
     updatedUserRecord = UserRegistry.objects.get(id=context.userRecord.id)
 
     context.updatedUserData = updatedUserData
     context.updatedUserRecord = updatedUserRecord
+    context.updateResponse = updateResponse
 
 @then('the user record should be updated')
 def step_impl(context):
@@ -120,6 +138,17 @@ def step_impl(context):
     context.test.assertNotEqual(context.userRecord.surname, context.updatedUserRecord.surname)
     context.test.assertNotEqual(context.userRecord.email, context.updatedUserRecord.email)
     context.test.assertNotEqual(context.userRecord.position, context.updatedUserRecord.position)
+
+@when('deleted using {url_prefix}/<int:user_id>')
+def step_impl(context, url_prefix):
+    url = '%s/%s' % (url_prefix, context.userRecord.id)
+    deleteResponse = context.test.client.delete(url).json()
+
+    context.deleteResponse = deleteResponse
+
+@then('the user record should be removed')
+def step_impl(context):
+    context.test.assertEqual(0, len(UserRegistry.objects.filter(id=context.userRecord.id)))
 
 def __get_user_data():
     userData = {

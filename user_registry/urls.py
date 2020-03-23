@@ -16,8 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.urls import include
-from user_registry_api.rest import add_new_user
 
 urlpatterns = [
-    path('user_registry_api/', include('user_registry_api.urls', namespace='user_registry_api')),
+    path('', include('user_registry_app.urls', namespace='user_registry_app')),
+    path('user_registry_api/', include('user_registry_api.urls', namespace='user_registry_api'))
 ]

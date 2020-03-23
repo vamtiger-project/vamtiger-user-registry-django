@@ -4,6 +4,7 @@ from django.forms.models import model_to_dict
 from django.core.paginator import Paginator
 from django.utils.http import urlencode
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 from .models import UserRegistry, UserRegistryForm, UserRegistryUpdateForm
 
 class ResponseResult:
@@ -17,7 +18,9 @@ class ResponseMessage:
     retrieved_users = 'Retrieved user(s)'
     updated_user = 'Updated user'
     failed_to_update_user = 'Failed to update user'
-    error_updating_user = 'Error updating user'
+    error_updating_user = 'Error updating user',
+    removed_user = 'Removed user',
+    failed_to_remove_user = 'Failed to remove user'
 
 class ResponseErrorMessage:
     no_user_found_for_user_id = 'No user for user id',
@@ -26,6 +29,7 @@ class ResponseErrorMessage:
 class Config:
     page_size = 10
 
+@csrf_exempt
 def add_new_user(request):
     response = {
         'POST': __add_new_user
@@ -34,10 +38,12 @@ def add_new_user(request):
 
     return JsonResponse(get_response(request))
 
-def handle_existing_user(request, user_id):
+@csrf_exempt
+def handle_user(request, user_id):
     response = {
         'GET': __get_user,
-        'PUT': __update_user
+        'PUT': __update_user,
+        'DELETE': __delete_user
     }
     get_response = response[request.method] or __not_found
 
@@ -61,12 +67,15 @@ def __not_found():
     return response
 
 def __add_new_user(request):
-    user = UserRegistryForm(request.POST or None)
+    user = UserRegistryForm(request.POST or {})
 
     if user.is_valid():
         user.save()
         response = {
-            'result': 'successful'
+            'result': 'successful',
+            'data': {
+                'user': user.instance.id
+            }
         }
     else:
         response = {
@@ -172,6 +181,32 @@ def __update_user(request, user_id):
             'message': ResponseMessage.error_updating_user,
             'data': {
                 'user': user_id
+            }
+        }
+
+    return response
+
+def __delete_user(request, user_id):
+    response = None
+    deleteUser = None
+
+    try:
+        deleteUser = UserRegistry.objects.get(id=user_id).delete()
+        response = {
+            'result': ResponseResult.successful,
+            'message': ResponseMessage.removed_user,
+            'data': {
+                'user': user_id,
+                'delete': deleteUser[0]
+            }
+        }
+    except:
+        response = {
+            'result': ResponseResult.failed,
+            'message': ResponseMessage.failed_to_remove_user,
+            'data': {
+                'user': user_id,
+                'delete': 0
             }
         }
 

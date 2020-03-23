@@ -14,6 +14,55 @@
                 "--no-capture"
             ],
             "console": "integratedTerminal"
-        }
+        },
+        {
+            "name": "Adding a new user with numbers in name fields",
+            "type": "python",
+            "request": "launch",
+            "program": "manage.py",
+            "args": [
+                "behave",
+                "--no-capture",
+                "-n",
+                "Adding a new user with numbers in name fields"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Adding a new user with an invalid email",
+            "type": "python",
+            "request": "launch",
+            "program": "manage.py",
+            "args": [
+                "behave",
+                "--no-capture",
+                "-n",
+                "Adding a new user with an invalid email"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "A user can be deleted",
+            "type": "python",
+            "request": "launch",
+            "program": "manage.py",
+            "args": [
+                "behave",
+                "--no-capture",
+                "-n",
+                "A user can be deleted"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Serve",
+            "type": "python",
+            "request": "launch",
+            "program": "manage.py",
+            "args": [
+                "runserver"
+            ],
+            "console": "integratedTerminal"
+        },
     ]
 }
